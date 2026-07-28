@@ -25,13 +25,18 @@ function isPackaged() {
   return app.isPackaged;
 }
 
+function backendName() {
+  return process.platform === 'win32' ? 'cognition-wp.exe' : 'cognition-wp';
+}
+
 function backendBinary() {
+  const name = backendName();
   if (isPackaged()) {
-    return path.join(process.resourcesPath, 'backend', 'cognition-wp.exe');
+    return path.join(process.resourcesPath, 'backend', name);
   }
   // Prefer release, fall back to debug for local electron runs
-  const release = path.join(__dirname, '..', 'target', 'release', 'cognition-wp.exe');
-  const debug = path.join(__dirname, '..', 'target', 'debug', 'cognition-wp.exe');
+  const release = path.join(__dirname, '..', 'target', 'release', name);
+  const debug = path.join(__dirname, '..', 'target', 'debug', name);
   if (fs.existsSync(release)) return release;
   return debug;
 }
@@ -121,9 +126,12 @@ function stopBackend() {
 }
 
 function appIconPath() {
-  // Packaged: resources/build/icon.ico or next to exe; dev: build/icon.ico
   const candidates = [
+    path.join(__dirname, '..', 'build', 'icon.icns'),
+    path.join(__dirname, '..', 'build', 'icon.png'),
     path.join(__dirname, '..', 'build', 'icon.ico'),
+    path.join(process.resourcesPath || '', 'build', 'icon.icns'),
+    path.join(process.resourcesPath || '', 'build', 'icon.png'),
     path.join(process.resourcesPath || '', 'build', 'icon.ico'),
     path.join(__dirname, '..', 'static', 'assets', 'logo.png'),
     path.join(process.resourcesPath || '', 'static', 'assets', 'logo.png'),
