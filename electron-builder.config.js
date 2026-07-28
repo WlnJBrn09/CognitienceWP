@@ -24,6 +24,7 @@ module.exports = {
   ],
   asar: true,
   compression: 'maximum',
+  publish: null,
   win: {
     icon: 'build/icon.ico',
     target: [{ target: 'portable', arch: ['x64'] }],
